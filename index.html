@@ -1,0 +1,74 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="dist/themes/default/style.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="dist/jstree.min.js"></script>
+  </head>
+
+  <body>
+    <div id="menu">
+          <input type="radio" id="fetch-api"  name="api-select" value="fetch">
+	  <label for="Fetch">Fetch API</label>
+	  <input type="radio" id="xml-http-request" name="api-select" value="xhr">
+	  <label for="xml-http-request">XMLHttpRequest (XHR)</label>
+          <input type="button" id="button_reload_data" value="Reload">
+    </div>
+    <div id="container">
+    </div>
+
+  <script>
+  $(function() {
+      var load_data = function() {
+	  const config_url = window.location.href + "config.json";
+	  console.log("Loading configuration from:" + config_url);
+	  
+          fetch(config_url)
+              .then(function(response) {
+                  return response.json();
+              })
+              .then(function(myJson) {
+                  console.log("Loaded configuration:" + JSON.stringify(myJson));
+
+                  var input_data = [];
+
+                  myJson.hosts.forEach(function(host) {
+                      var services_names = [];
+                      host.services.forEach(function(service) {
+                          //console.log("DEBUG:" + service.name);
+                          services_names.push({
+                              'text': service.name + " (" + service.port  + ")",
+			      'port': service.port,
+                              'icon' : 'jstree-file'
+                          });
+                      });
+
+                      input_data.push({
+                          'text': host.hostname,
+                          'state': {
+                            'opened':   false,
+                            'disabled': false,
+                            'selected': false
+                          },
+                          'children' : services_names
+                      });
+                  });
+
+                  console.log(input_data);
+
+                  console.log("BEFORE jstree");
+
+                  $('#container').jstree("destroy");
+                  $('#container').jstree({
+                      'core' : {
+                          'data': input_data
+                      }
+                  });
+
+              });
+      };
+      
+      $('#button_reload_data').on('click', load_data);
+    })
+  </script>
+  </body>
+</html>
