@@ -1,104 +1,108 @@
 {
     "hosts" : [
-	{
-	    "hostname" : "bitbucket.com",
-	    "services" : [
-		{
-		    "name" : "ssh",
-		    "port" : 22
-		},
-		{
-		    "name" : "http",
-		    "port" : 80
-		},
-		{
-		    "name" : "https",
-		    "port" : 443
-		},
-		{
-		    "name" : "non-existent-dummy",
-		    "port" : 55555
-		}
-	    ]
-	},
-	{
-	    "hostname" : "github.com",
-	    "services" : [
-		{
-		    "name" : "ssh",
-		    "port" : 22
-		},
-		{
-		    "name" : "smtp",
-		    "port" : 25
-		},
-		{
-		    "name" : "http",
-		    "port" : 80
-		},
-		{
-		    "name" : "https",
-		    "port" : 443
-		},
-		{
-		    "name" : "non-existent-dummy",
-		    "port" : 55555
-		}
-	    ]
-	},
-	{
-	    "hostname" : "mbohun.github.io",
-	    "services" : [
-		{
-		    "name" : "ftp",
-		    "port" : 21
-		},
-		{
-		    "name" : "ssh",
-		    "port" : 22
-		},
-		{
-		    "name" : "http",
-		    "port" : 80
-		},
-		{
-		    "name" : "https",
-		    "port" : 443
-		},
-		{
-		    "name" : "non-existent-dummy",
-		    "port" : 424242
-		}
-	    ]
-	},
-	{
-	    "hostname" : "193-119-48-13.static.tpgi.com.au",
-	    "services" : [
-		{
-		    "name" : "ftp",
-		    "port" : 21
-		},
-		{
-		    "name" : "ssh",
-		    "port" : 22
-		},
-		{
-		    "name" : "smtp",
-		    "port" : 25
-		},
-		{
-		    "name" : "http",
-		    "port" : 80
-		},
-		{
-		    "name" : "https",
-		    "port" : 443
-		},
-		{
-		    "name" : "non-existent-dummy",
-		    "port" : 42000
-		}
-	    ]
-	}
+        {
+            "hostname" : "bitbucket.com",
+            "services" : [
+                {
+                    "name" : "ssh",
+                    "port" : 22
+                },
+                {
+                    "name" : "http",
+                    "port" : 80
+                },
+                {
+                    "name" : "https",
+                    "port" : 443
+                },
+                {
+                    "name" : "non-existent-dummy",
+                    "port" : 55555
+                }
+            ]
+        },
+        {
+            "hostname" : "github.com",
+            "services" : [
+                {
+                    "name" : "ssh",
+                    "port" : 22
+                },
+                {
+                    "name" : "smtp",
+                    "port" : 25
+                },
+                {
+                    "name" : "http",
+                    "port" : 80
+                },
+                {
+                    "name" : "https",
+                    "port" : 443
+                },
+                {
+                    "name" : "non-existent-dummy",
+                    "port" : 55555
+                }
+            ]
+        },
+        {
+            "hostname" : "mbohun.github.io",
+            "services" : [
+                {
+                    "name" : "ftp",
+                    "port" : 21
+                },
+                {
+                    "name" : "ssh",
+                    "port" : 22
+                },
+                {
+                    "name" : "http",
+                    "port" : 80
+                },
+                {
+                    "name" : "https",
+                    "port" : 443
+                },
+                {
+                    "name" : "non-existent-dummy",
+                    "port" : 42424
+                }
+            ]
+        },
+        {
+            "hostname" : "193-119-48-13.static.tpgi.com.au",
+            "services" : [
+                {
+                    "name" : "ftp",
+                    "port" : 21
+                },
+                {
+                    "name" : "ssh",
+                    "port" : 22
+                },
+                {
+                    "name" : "smtp",
+                    "port" : 25
+                },
+                {
+                    "name" : "http",
+                    "port" : 80
+                },
+                {
+                    "name" : "https",
+                    "port" : 443
+                },
+                {
+                    "name" : "test-privileged-port",
+                    "port" : 1111
+                },
+                {
+                    "name" : "non-existent-dummy",
+                    "port" : 42000
+                }
+            ]
+        }
     ]
 }
