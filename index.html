@@ -6,29 +6,91 @@
     </head>
     <body>
         <div id="menu">
-            <input type="radio" id="fetch-api"  name="api-select" value="fetch" checked>
-            <label for="Fetch">Fetch API</label>
-            <input type="radio" id="xml-http-request" name="api-select" value="xhr">
-            <label for="xml-http-request">XMLHttpRequest (XHR)</label>
-            <input type="button" id="button_reload_data" value="Reload">
+            <form name="apiForm">
+                <fieldset>
+                    <legend>port scan API</legend>
+                    <input type="radio" id="apiWS" name="apiSelect" value="ws" checked>
+                    <label for="apiWS">WebSocket</label>
+                    <input type="radio" id="apiXHR" name="apiSelect" value="xhr">
+                    <label for="apiXHR">XMLHttpRequest (XHR)</label>
+
+                    <input type="button" id="button_reload_data" value="Reload">
+                </filedset>
+            </form>
         </div>
         <div id="container">
         </div>
         <script>
           $(function() {
-              var port_test = function(hostname, port) {
+              // NOTE: UNFORTUNATELLY: *EXACTLY* what we are trying to achieve is DELIBERATELY FORBIDDEN !!!
+              //
+              //       Explanation: ALthough the browser ("user agent") does receive the error details, for example:
+              //           "WebSocket connection to 'wss://github.com/' failed: Error during WebSocket handshake: Unexpected response code: 200"
+              //
+              //       The WebSocket API specification explicitely states:
+              //       The browser ("user agent") "MUST NOT" pass these error details to the script.
+              //       It does deliberatelly *REMOVE* the specific error details, by setting (CloseEvent's) code to 1006, and the reason string to ""
+              //       for *ALL* (CloseEvent-s) "errors":
+              //       https://html.spec.whatwg.org/multipage/web-sockets.html#feedback-from-the-protocol:concept-websocket-close-reason
+              //
+              var port_test_ws = function(hostname, port) {
                   const test_url = 'wss://' + hostname + ':' + port;
                   console.log('TESTING:' + test_url);
                   try {
                       const sock = new WebSocket(test_url, 'dummy');
+                      sock.onopen = function(event) {
+                          // NOTE: we should *NEVER* get here, because there should be no real WebSocket server!
+                          console.log("sock.onopen:", event);
+                      };
+
+                      sock.onmessage = function (event) {
+                          // NOTE: we should *NEVER* get here, because there should be no real WebSocket server,
+                          //       but this would be even "worse" than onopen, because this WEbSocket server
+                          //       actually sent a message!
+                          console.log("sock.onmessage:", event);
+                      };
+
+                      sock.onerror = function (event) {
+                          console.log("sock.onerror:", event);
+                          console.log("sock:", sock);
+                      };
+
+                      sock.onclose = function (event) {
+                          console.log("sock.onclose:", event);
+                          console.log("sock:", sock);
+                      };
                   } catch (error) {
                       console.log('ERROR:', error)
                   }
               };
 
+              var port_test_xhr = function(hostname, port) {
+                  const test_url = 'https://' + hostname + ':' + port;
+                  console.log('TESTING:' + test_url);
+
+                  const xhr = new XMLHttpRequest();
+                  xhr.addEventListener('error', function(event) {
+                      console.log("XMLHttpRequest error:", event);
+                  });
+                  xhr.addEventListener('onreadystatechange', function(event) {
+                      console.log("XMLHttpRequest onreadystatechange:", event);
+                  });
+                  xhr.open("GET", test_url);
+                  xhr.send();
+                  return xhr;
+              };
+
+              const port_test = {
+                  'ws'  : port_test_ws,
+                  'xhr' : port_test_xhr
+              };
+
               var load_data = function() {
                   const config_url = window.location.href + "config.json";
                   console.log("Loading configuration from:" + config_url);
+
+                  const port_test_api = document.forms.apiForm.apiSelect.value;
+                  console.log("DEBUG: port_test API:" + port_test_api);
 
                   fetch(config_url)
                       .then(function(response) {
@@ -42,7 +104,7 @@
                               let services_names = [];
                               host.services.forEach(function(service) {
                                   //console.log("DEBUG:" + service.name);
-                                  port_test(host.hostname, service.port);
+                                  port_test[port_test_api](host.hostname, service.port);
                                   services_names.push({
                                       'text': service.name + " (" + service.port  + ")",
                                       'port': service.port,
