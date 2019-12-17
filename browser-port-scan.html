@@ -69,6 +69,7 @@ function timeURL(url, times, callbackDone, callbackProgress)
 			}
 		}
 		x.open("GET", url, true);
+		x.timeout = 2000;
 		x.send();
 	}
 
