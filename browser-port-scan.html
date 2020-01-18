@@ -153,18 +153,30 @@ function runTimingScan(button)
 
 <script>
 
-// NOTE: This is naive, because *NOT* all "unprivileged" ports (1024 - 65535)
-//       are allowed in a web browser. For example the unprivileged ports
-//       2049, 3659, 4045, 6000, 6666, 6667, 6668, 6669 are *NOT* allowed from
-//       a web browser; giving ERR_UNSAFE_PORT (Meaning the browser won't even
-//       attempt to connect to those ports).
+// These are UNSAFE TCP ports; The XMLHttpReqest API won't even open/sent()
+// request to any ot these ports (tested in googl-chrome and firefox).
 //
-const PORTS_UNPRIVILEGED =
-    Array.apply(0, Array(65535 - 1023)).map(function (x, y) {
-        return y + 1024;
-    });
+const PORTS_WEB_BROWSER_UNSAFE = [
+    2049,
+    3659,
+    4045,
+    6000,
+    6665,
+    6666,
+    6667,
+    6668,
+    6669,
+    6697
+];
 
-const PORTS = [80, 443].concat(PORTS_UNPRIVILEGED);
+const PORTS_UNPRIVILEGED =
+      Array.apply(0, Array(65535 - 1023 - PORTS_WEB_BROWSER_UNSAFE.length)).map(function (x, y) {
+	  return y + 1024;
+      });
+
+const PORTS = [80, 443].concat(PORTS_UNPRIVILEGED).filter(function(p) {
+    return !PORTS_WEB_BROWSER_UNSAFE.includes(p);
+});
 
 $(document).ready(function() {
 	for (var i = 0; i < PORTS.length; i++) {
