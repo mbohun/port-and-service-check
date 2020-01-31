@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+    </head>
+    <body>
+        <div id="container">
+        </div>
+
+        <script type="text/javascript">
+            var loadConfig = function(config_url) {
+                const xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        console.log("Loaded configuration:" + xhr.responseText);
+                    }
+                };
+
+                xhr.open("GET", config_url, true);
+                xhr.send();
+            };
+
+	    var hasCustomConfig = function() {
+		// NOTE: being nice, but over the top
+		// return (0 == window.location.search.length) && window.location.search.includes('config=');
+		return window.location.search.includes('config=');
+	    };
+
+	    var getCustomConfig = function() {
+		// TODO: Now that we got a nice new shiny hammer, let's look
+		//       for some nails! This is an incredibly beautiful
+		//       opportunity to demonstrate our knowledge and all
+		//       that book learnin' we did on Memoization!
+		const url_args = {};
+		window.location.search.substr(1).split('&').forEach(arg => {
+		    let [k,v] = arg.split('=');
+		    //console.log("DEBUG: key:" + k + ", val:" + v);
+		    url_args[k] = v;
+		});
+
+		console.log("DEBUG:", url_args);
+		return url_args['config'];
+	    };
+
+            var load_data = function() {
+                const config_url = hasCustomConfig() ? getCustomConfig() : 'TODO: REPLACE THIS WITH YOUR DEFAULT CONFIG URL';
+                console.log("Loading configuration from:" + config_url);
+                loadConfig(config_url);
+            };
+
+            window.onload = load_data;
+
+        </script>
+    </body>
+</html>
